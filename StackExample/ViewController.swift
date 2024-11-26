@@ -11,7 +11,8 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var textView: UITextView!
     
-    var stack = Stack<String>()
+    var undoStack = Stack<String>()
+    var redoStack = Stack<String>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,22 +21,40 @@ class ViewController: UIViewController {
     
     @IBAction func clearButtonPressed(_ sender: UIButton) {
         textView.text = ""
+        undoStack.removeAll()
+        redoStack.removeAll()
     }
     
     
     @IBAction func undoButtonPressed(_ sender: UIButton) {
-        textView.text = stack.pop()
+        textView.text = undoStack.pop()
+        redoStack.push(element: textView.text!)
+    }
+    
+    
+    @IBAction func redoButtonPressed(_ sender: UIButton) {
+        textView.text = redoStack.pop()
+        undoStack.push(element: textView.text!)
     }
     
     //    @IBAction func saveButtonPressed(_ sender: UIButton) {
     //        stack.push(element: textView.text!)
     //    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        textView.endEditing(true)
+    }
 }
 
 extension ViewController: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
         if textView.text!.last == " " {
-            stack.push(element: textView.text!)
+            undoStack.push(element: textView.text!)
         }
     }
 }
+
+//extension ViewController: UITextFieldDelegate {
+//    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+//        return true
+//    }
+//}

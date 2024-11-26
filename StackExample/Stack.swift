@@ -24,6 +24,10 @@ struct Stack<Element> {
     mutating func pop() -> Element? {
         return storage.popLast()
     }
+    
+    mutating func removeAll() {
+        storage.removeAll()
+    }
 }
 
 extension Stack: CustomStringConvertible {
